@@ -195,33 +195,33 @@ html_content = """
             }
 
             const rows = records.map(r => `
-                <tr>
-                    <td>${r.product_name}</td>
-                    <td>$${r.your_price}</td>
-                    <td>$${r.competitor_price}</td>
-                    <td><span class="badge ${r.sentiment === 'Positive' ? 'badge-positive' : r.sentiment === 'Negative' ? 'badge-negative' : 'badge-neutral'}">${r.sentiment}</span></td>
-                    <td>${r.sentiment_score}</td>
-                    <td>${r.pricing_insight}</td>
-                    <td>${r.recommendation}</td>
-                    <td>${new Date(r.created_at).toLocaleDateString()}</td>
+                <tr style="border-bottom:1px solid #334155">
+                    <td style="padding:10px; word-wrap:break-word">${r.product_name}</td>
+                    <td style="padding:10px">$${r.your_price}</td>
+                    <td style="padding:10px">$${r.competitor_price}</td>
+                    <td style="padding:10px"><span class="badge ${r.sentiment === 'Positive' ? 'badge-positive' : r.sentiment === 'Negative' ? 'badge-negative' : 'badge-neutral'}">${r.sentiment}</span></td>
+                    <td style="padding:10px">${r.sentiment_score}</td>
+                    <td style="padding:10px; word-wrap:break-word">${r.pricing_insight}</td>
+                    <td style="padding:10px; word-wrap:break-word">${r.recommendation}</td>
+                    <td style="padding:10px">${new Date(r.created_at).toLocaleDateString()}</td>
                 </tr>
             `).join('');
 
             document.getElementById('history_table').innerHTML = `
-                <table style="width:100%; border-collapse:collapse; font-size:0.85em">
+                <table style="width:100%; border-collapse:collapse; font-size:0.85em; table-layout:fixed">
                     <thead>
                         <tr style="background:#1e3a5f; color:white">
-                            <th style="padding:10px; text-align:left">Product</th>
-                            <th style="padding:10px; text-align:left">Your Price</th>
-                            <th style="padding:10px; text-align:left">Comp Price</th>
-                            <th style="padding:10px; text-align:left">Sentiment</th>
-                            <th style="padding:10px; text-align:left">Score</th>
-                            <th style="padding:10px; text-align:left">Pricing Insight</th>
-                            <th style="padding:10px; text-align:left">Recommendation</th>
-                            <th style="padding:10px; text-align:left">Date</th>
+                            <th style="padding:10px; text-align:left; width:15%">Product</th>
+                            <th style="padding:10px; text-align:left; width:10%">Your Price</th>
+                            <th style="padding:10px; text-align:left; width:10%">Comp Price</th>
+                            <th style="padding:10px; text-align:left; width:10%">Sentiment</th>
+                            <th style="padding:10px; text-align:left; width:8%">Score</th>
+                            <th style="padding:10px; text-align:left; width:22%">Pricing Insight</th>
+                            <th style="padding:10px; text-align:left; width:17%">Recommendation</th>
+                            <th style="padding:10px; text-align:left; width:8%">Date</th>
                         </tr>
                     </thead>
-                    <tbody style="color:#cbd5e1">${rows}</tbody>
+                    <tbody style="color:#cbd5e1; word-wrap:break-word">${rows}</tbody>
                 </table>
             `;
         }

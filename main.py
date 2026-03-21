@@ -1,9 +1,9 @@
+from database import AnalysisRecord, PriceHistory, get_db
 from fastapi import FastAPI, Depends
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from textblob import TextBlob
 from sqlalchemy.orm import Session
-from database import AnalysisRecord, get_db
 from templates import html_content
 from datetime import datetime
 
@@ -52,12 +52,12 @@ def analyze_product(data: ProductData, db: Session = Depends(get_db)):
 
     # Save to database
     # Check if product already exists in database
+    # Check if product already exists
     existing = db.query(AnalysisRecord).filter(
         AnalysisRecord.product_name == data.product_name
     ).first()
 
     if existing:
-        # Update existing record instead of creating new one
         existing.your_price = data.price
         existing.competitor_price = data.competitor_price
         existing.review = data.review
@@ -66,10 +66,8 @@ def analyze_product(data: ProductData, db: Session = Depends(get_db)):
         existing.pricing_insight = pricing_insight
         existing.recommendation = recommendation
         existing.created_at = datetime.utcnow()
-        db.commit()
         saved_status = "updated"
     else:
-        # Save new record
         record = AnalysisRecord(
             product_name=data.product_name,
             your_price=data.price,
@@ -81,16 +79,24 @@ def analyze_product(data: ProductData, db: Session = Depends(get_db)):
             recommendation=recommendation
         )
         db.add(record)
-        db.commit()
         saved_status = "new"
-        
+
+    # Always save to price history — runs for BOTH new and existing
+    history_record = PriceHistory(
+        product_name=data.product_name,
+        your_price=data.price,
+        competitor_price=data.competitor_price,
+        sentiment_score=round(sentiment_score, 2)
+    )
+    db.add(history_record)
+    db.commit()
+
     return {
         "product": data.product_name,
         "sentiment_score": round(sentiment_score, 2),
         "sentiment": sentiment,
         "pricing_insight": pricing_insight,
-        "recommendation": recommendation,
-        "record_status": saved_status
+        "recommendation": recommendation
     }
 
 # Health check endpoint
@@ -156,3 +162,67 @@ def get_history(db: Session = Depends(get_db)):
         }
         for r in records
     ]
+@app.get("/trend/{product_name}")
+def get_price_trend(product_name: str, db: Session = Depends(get_db)):
+    records = db.query(PriceHistory).filter(
+        PriceHistory.product_name == product_name
+    ).order_by(PriceHistory.recorded_at.asc()).all()
+    
+    return [
+        {
+            "date": str(r.recorded_at),
+            "your_price": r.your_price,
+            "competitor_price": r.competitor_price,
+            "sentiment_score": r.sentiment_score
+        }
+        for r in records
+    ]
+
+@app.get("/score/{product_name}")
+def get_product_score(product_name: str, db: Session = Depends(get_db)):
+    record = db.query(AnalysisRecord).filter(
+        AnalysisRecord.product_name == product_name
+    ).first()
+
+    if not record:
+        return {"error": "Product not found"}
+
+    score = 5.0
+    score += record.sentiment_score * 3
+    price_diff = record.competitor_price - record.your_price
+    if price_diff > 20:
+        score += 2
+    elif price_diff > 10:
+        score += 1.5
+    elif price_diff > 0:
+        score += 1
+    elif price_diff < -20:
+        score -= 2
+    elif price_diff < -10:
+        score -= 1.5
+    elif price_diff < 0:
+        score -= 1
+
+    score = max(0, min(10, round(score, 1)))
+
+    if score >= 8:
+        label = "Excellent"
+        color = "#22c55e"
+    elif score >= 6:
+        label = "Good"
+        color = "#3b82f6"
+    elif score >= 4:
+        label = "Average"
+        color = "#f59e0b"
+    else:
+        label = "Poor"
+        color = "#ef4444"
+
+    return {
+        "product": record.product_name,
+        "score": score,
+        "label": label,
+        "color": color,
+        "sentiment_score": record.sentiment_score,
+        "price_difference": round(price_diff, 2)
+    }

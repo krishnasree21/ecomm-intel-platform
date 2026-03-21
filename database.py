@@ -32,6 +32,19 @@ class AnalysisRecord(Base):
 # Creates the table automatically
 Base.metadata.create_all(bind=engine)
 
+class PriceHistory(Base):
+    __tablename__ = "price_history"
+
+    id = Column(Integer, primary_key=True, index=True)
+    product_name = Column(String)
+    your_price = Column(Float)
+    competitor_price = Column(Float)
+    sentiment_score = Column(Float)
+    recorded_at = Column(DateTime, default=datetime.utcnow)
+
+# Update tables
+Base.metadata.create_all(bind=engine)
+
 # Gets a database connection
 def get_db():
     db = SessionLocal()

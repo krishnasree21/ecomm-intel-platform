@@ -3,6 +3,7 @@ html_content = """
 <html>
 <head>
     <title>E-Commerce Intelligence Platform</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -63,9 +64,6 @@ html_content = """
             margin-top: 15px;
             display: none;
         }
-        .positive { color: #22c55e; }
-        .negative { color: #ef4444; }
-        .neutral { color: #f59e0b; }
         .badge {
             display: inline-block;
             padding: 4px 12px;
@@ -97,7 +95,6 @@ html_content = """
     </div>
 
     <div class="cards">
-        <!-- Sentiment & Pricing Analysis -->
         <div class="card">
             <h2>📊 Product Intelligence</h2>
             <input type="text" id="product_name" placeholder="Product Name" />
@@ -108,7 +105,6 @@ html_content = """
             <div class="result" id="analyze_result"></div>
         </div>
 
-        <!-- Competitor Comparison -->
         <div class="card">
             <h2>🏆 Competitor Comparison</h2>
             <input type="text" id="comp_product" placeholder="Product Name" />
@@ -140,10 +136,27 @@ html_content = """
             const result = await res.json();
             const badgeClass = result.sentiment === 'Positive' ? 'badge-positive' :
                                result.sentiment === 'Negative' ? 'badge-negative' : 'badge-neutral';
+
+            // Get product score safely
+            let scoreHtml = '';
+            try {
+                const scoreRes = await fetch(`/score/${encodeURIComponent(data.product_name)}`);
+                const scoreData = await scoreRes.json();
+                if (scoreData.score !== undefined) {
+                    scoreHtml = `
+                        <div style="text-align:center; margin:15px 0">
+                            <div style="font-size:3em; font-weight:bold; color:${scoreData.color}">${scoreData.score}</div>
+                            <div style="color:${scoreData.color}; font-weight:bold">${scoreData.label}</div>
+                            <div style="color:#94a3b8; font-size:0.85em">Overall Product Score / 10</div>
+                        </div>`;
+                }
+            } catch(e) { console.log('Score fetch failed:', e); }
+
             const div = document.getElementById('analyze_result');
             div.style.display = 'block';
             div.innerHTML = `
                 <span class="badge ${badgeClass}">${result.sentiment}</span>
+                ${scoreHtml}
                 <div class="stat">Sentiment Score: <span>${result.sentiment_score}</span></div>
                 <div class="stat">Pricing: <span>${result.pricing_insight}</span></div>
                 <div class="stat">Recommendation: <span>${result.recommendation}</span></div>
@@ -184,12 +197,72 @@ html_content = """
                 <div style="margin-top:10px">${rankingHtml}</div>
             `;
         }
+
+        let trendChartInstance = null;
+
+        async function loadTrend() {
+            const productName = document.getElementById('trend_product').value;
+            if (!productName) return;
+
+            const res = await fetch(`/trend/${encodeURIComponent(productName)}`);
+            const records = await res.json();
+
+            if (records.length === 0) {
+                document.getElementById('trend_message').textContent =
+                    'No trend data found. Analyze this product multiple times to see trends.';
+                return;
+            }
+
+            document.getElementById('trend_message').textContent = '';
+            const labels = records.map(r => new Date(r.date).toLocaleDateString());
+            const yourPrices = records.map(r => r.your_price);
+            const compPrices = records.map(r => r.competitor_price);
+
+            if (trendChartInstance) trendChartInstance.destroy();
+
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            trendChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Your Price',
+                            data: yourPrices,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59,130,246,0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Competitor Price',
+                            data: compPrices,
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239,68,68,0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { labels: { color: '#94a3b8' } }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+                        y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
+                    }
+                }
+            });
+        }
+
         async function loadHistory() {
             const res = await fetch('/history');
             const records = await res.json();
-            
+
             if (records.length === 0) {
-                document.getElementById('history_table').innerHTML = 
+                document.getElementById('history_table').innerHTML =
                     '<p style="color:#94a3b8; text-align:center">No analyses saved yet.</p>';
                 return;
             }
@@ -226,13 +299,28 @@ html_content = """
             `;
         }
 
-        // Load history when page opens
         window.onload = loadHistory;
     </script>
 
+    <!-- Price Trend Chart -->
+    <div style="margin-top:30px; background:#1e293b; border-radius:12px; padding:25px; border:1px solid #334155">
+        <h2 style="color:#3b82f6; margin-top:0">📈 Price Trend Analysis</h2>
+        <p style="color:#94a3b8; font-size:0.9em">Track how prices change over time for any product</p>
+        <div style="display:flex; gap:10px; margin-bottom:20px">
+            <input type="text" id="trend_product" placeholder="Enter product name to see trend"
+                style="flex:1; padding:10px; background:#0f172a; border:1px solid #334155; border-radius:6px; color:white"/>
+            <button onclick="loadTrend()"
+                style="width:auto; padding:10px 20px; background:#2e6da4; color:white; border:none; border-radius:6px; cursor:pointer">
+                Show Trend
+            </button>
+        </div>
+        <canvas id="trendChart" style="max-height:300px"></canvas>
+        <p id="trend_message" style="color:#94a3b8; text-align:center"></p>
+    </div>
+
     <!-- History Section -->
     <div style="margin-top:30px; background:#1e293b; border-radius:12px; padding:25px; border:1px solid #334155">
-        <h2 style="color:#3b82f6; margin-top:0">📈 Analysis History</h2>
+        <h2 style="color:#3b82f6; margin-top:0">📋 Analysis History</h2>
         <p style="color:#94a3b8; font-size:0.9em">Every product you analyze gets saved here automatically</p>
         <div id="history_table">Loading...</div>
         <button onclick="loadHistory()" style="width:auto; padding:8px 20px; margin-top:15px; background:#1e3a5f">🔄 Refresh</button>

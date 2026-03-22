@@ -100,6 +100,10 @@ html_content = """
             <input type="text" id="product_name" placeholder="Product Name" />
             <input type="number" id="your_price" placeholder="Your Price ($)" step="0.01" />
             <input type="number" id="comp_price" placeholder="Competitor Price ($)" step="0.01" />
+            <button onclick="autoFetchPrice()" style="background:#166534; margin-top:5px">
+                🔍 Auto Fetch Competitor Price
+            </button>
+            <p id="fetch_status" style="color:#94a3b8; font-size:0.85em; margin:5px 0"></p>
             <textarea id="review" rows="3" placeholder="Paste a customer review here..."></textarea>
             <button onclick="analyzeProduct()">Analyze Product</button>
             <div class="result" id="analyze_result"></div>
@@ -162,6 +166,37 @@ html_content = """
                 <div class="stat">Recommendation: <span>${result.recommendation}</span></div>
             `;
         }
+
+        async function autoFetchPrice() {
+            const productName = document.getElementById('product_name').value;
+            if (!productName) {
+                document.getElementById('fetch_status').textContent = 'Please enter a product name first.';
+                return;
+            }
+            
+            document.getElementById('fetch_status').textContent = '🔍 Searching for price...';
+            
+            try {
+                const res = await fetch(`/fetch-price/${encodeURIComponent(productName)}`);
+                const data = await res.json();
+                
+                if (data.status === 'found' && data.suggested_price) {
+                    document.getElementById('comp_price').value = data.suggested_price;
+                    document.getElementById('fetch_status').textContent = 
+                        `✅ Price found: $${data.suggested_price} (from ${data.source})`;
+                    document.getElementById('fetch_status').style.color = '#22c55e';
+                } else {
+                    document.getElementById('fetch_status').textContent = 
+                        '⚠️ Could not find price automatically. Please enter manually.';
+                    document.getElementById('fetch_status').style.color = '#f59e0b';
+                }
+            } catch(e) {
+                document.getElementById('fetch_status').textContent = 
+                    '❌ Search failed. Please enter price manually.';
+                document.getElementById('fetch_status').style.color = '#ef4444';
+            }
+        }
+
 
         async function compareCompetitors() {
             const competitors = {};

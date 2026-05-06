@@ -132,7 +132,7 @@ html_content = """
 
 <!-- Sidebar -->
 <div class="sidebar">
-    <div class="sidebar-logo">⚡ EcomIntel <span>AI</span></div>
+    <div class="sidebar-logo" onclick="window.location.href='/'" style="cursor:pointer">⚡Ecommm_Intell <span>AI</span></div>
 
     <div class="nav-section">Intelligence</div>
     <div class="nav-item active" onclick="showPage('dashboard')">

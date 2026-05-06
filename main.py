@@ -1,3 +1,4 @@
+from landing import landing_content
 from database import AnalysisRecord, PriceHistory, get_db
 from fastapi import FastAPI, Depends
 from fastapi.responses import HTMLResponse
@@ -99,10 +100,15 @@ def analyze_product(data: ProductData, db: Session = Depends(get_db)):
         "recommendation": recommendation
     }
 
-# Health check endpoint
+
 @app.get("/")
 def home():
     return {"status": "E-Commerce Intelligence API is running successfully"}
+
+# Health check endpoint
+#@app.get("/")
+#def home():
+ #   return {"status": "E-Commerce Intelligence API is running successfully"}
 
 # Competitor comparison model
 class CompetitorData(BaseModel):

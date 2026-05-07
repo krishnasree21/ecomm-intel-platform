@@ -101,9 +101,11 @@ def analyze_product(data: ProductData, db: Session = Depends(get_db)):
     }
 
 
-@app.get("/")
-def home():
-    return {"status": "E-Commerce Intelligence API is running successfully"}
+@app.get("/", response_class=HTMLResponse)
+def landing():
+    return landing_content
+#def home():
+#    return {"status": "E-Commerce Intelligence API is running successfully"}
 
 # Health check endpoint
 #@app.get("/")

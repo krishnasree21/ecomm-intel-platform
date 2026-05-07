@@ -164,6 +164,16 @@ landing_content = """
         .chat-input-row input::placeholder { color: #3f3f46; }
         .chat-send { background: #7c3aed; border: none; padding: 12px 14px; color: white; cursor: pointer; font-size: 0.88em; transition: background 0.15s; }
         .chat-send:hover { background: #6d28d9; }
+
+        /* FAQ */
+        .faq-item { border: 1px solid #1f1f23; border-radius: 10px; margin-bottom: 10px; overflow: hidden; cursor: pointer; transition: border-color 0.2s; }
+        .faq-item:hover { border-color: #2d1f52; }
+        .faq-item.open { border-color: #7c3aed; }
+        .faq-question { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; font-size: 0.92em; font-weight: 600; color: #ededed; background: #111113; }
+        .faq-icon { color: #7c3aed; font-size: 1.2em; font-weight: 300; transition: transform 0.2s; }
+        .faq-item.open .faq-icon { transform: rotate(45deg); }
+        .faq-answer { display: none; padding: 0 20px 16px; font-size: 0.84em; color: #52525b; line-height: 1.7; background: #111113; }
+        .faq-item.open .faq-answer { display: block; }
     </style>
 </head>
 <body>
@@ -174,8 +184,8 @@ landing_content = """
     <div class="nav-links">
         <a onclick="scrollTo('features')">Features</a>
         <a onclick="scrollTo('how-it-works')">How it works</a>
-        <a onclick="scrollTo('why-us')">Why PriceIQ</a>
-        <a onclick="scrollTo('about')">Our Data</a>
+        <a onclick="scrollTo('why-priceiq')">Why PriceIQ</a>
+        <a onclick="scrollTo('our-data')">Our Data</a>
     </div>
     <div class="nav-actions">
         <button class="btn-nav btn-ghost" onclick="openLogin()">Sign in</button>
@@ -196,8 +206,8 @@ landing_content = """
     <div class="hero-stats">
         <div class="hero-stat"><div class="hero-stat-num">80+</div><div class="hero-stat-lbl">Product categories</div></div>
         <div class="hero-stat"><div class="hero-stat-num">Real-time</div><div class="hero-stat-lbl">Price intelligence</div></div>
-        <div class="hero-stat"><div class="hero-stat-num">NLP</div><div class="hero-stat-lbl">Sentiment analysis</div></div>
-        <div class="hero-stat"><div class="hero-stat-num">6</div><div class="hero-stat-lbl">AI microservices</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">Free</div><div class="hero-stat-lbl">No credit card needed</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">AI</div><div class="hero-stat-lbl">Powered decisions</div></div>
     </div>
 </section>
 
@@ -215,7 +225,7 @@ landing_content = """
 </div>
 
 <!-- FEATURES — LIGHT -->
-<section class="light-section" id="features">
+<section class="light-section" id="features"> 
     <h2>Everything your pricing team needs</h2>
     <p class="section-sub">Six AI-powered modules that work together to give you an unfair competitive advantage.</p>
     <div class="features-grid">
@@ -281,7 +291,7 @@ landing_content = """
 </section>
 
 <!-- WHY US — LIGHT -->
-<section class="why-section" id="why-us">
+<section class="why-section" id="why-priceiq">
     <h2>Why PriceIQ over others</h2>
     <p class="section-sub">Jungle Scout tracks Amazon. Keepa shows price history. We give you the full intelligence picture — and we're building towards it fast.</p>
     <div class="compare-table">
@@ -343,7 +353,7 @@ landing_content = """
 </section>
 
 <!-- ABOUT / OUR DATA -->
-<section class="about-section" id="about">
+<section class="about-section" id="our-data">
     <div class="about-grid">
         <div class="about-left">
             <h2>Built on <em>real market data</em>, not guesswork.</h2>
@@ -366,6 +376,50 @@ landing_content = """
     <div class="cta-actions">
         <button class="btn-hero-primary" onclick="goToDashboard()">Launch Intelligence Dashboard →</button>
         <button class="btn-hero-secondary" onclick="openLogin()">Create free account</button>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section style="background:#0e0e10; padding:80px 60px;" id="faq">
+    <h2 style="font-size:2em; font-weight:800; text-align:center; margin-bottom:12px;">Frequently asked questions</h2>
+    <p style="text-align:center; color:#3f3f46; font-size:0.93em; max-width:480px; margin:0 auto 48px; line-height:1.6;">Everything you need to know about PriceIQ.</p>
+    <div style="max-width:700px; margin:0 auto;">
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">What exactly does PriceIQ do? <span class="faq-icon">+</span></div>
+            <div class="faq-answer">PriceIQ is an AI-powered e-commerce intelligence platform. You enter your product, your price, a competitor price, and a customer review. PriceIQ instantly analyzes the sentiment of the review, compares your pricing against competitors, gives you an overall intelligence score out of 10, and recommends exactly what action to take.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">Is PriceIQ really free? <span class="faq-icon">+</span></div>
+            <div class="faq-answer">Yes — completely free to use in demo mode. No credit card, no signup required. Just click the demo button and start analyzing your products immediately. Premium features like customer segmentation and sales forecasting are coming soon.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">How does the sentiment analysis work? <span class="faq-icon">+</span></div>
+            <div class="faq-answer">PriceIQ uses Natural Language Processing to read and score customer reviews. It analyzes the emotional tone of the text and gives a score from -1 (very negative) to +1 (very positive). This score is combined with your pricing position to create an overall product intelligence score.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">What products and categories can I track? <span class="faq-icon">+</span></div>
+            <div class="faq-answer">PriceIQ covers 80+ product categories including electronics, phones, laptops, headphones, TVs, home appliances, fashion, food and grocery, fitness equipment, gaming, beauty products, and furniture. We are continuously expanding the database.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">How is PriceIQ different from Jungle Scout or Keepa? <span class="faq-icon">+</span></div>
+            <div class="faq-answer">Jungle Scout is focused on Amazon sellers only. Keepa tracks Amazon price history only. PriceIQ works across all product categories, adds AI sentiment analysis on top of pricing data, and gives you a combined intelligence score — something neither platform offers.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">What is the Product Intelligence Score? <span class="faq-icon">+</span></div>
+            <div class="faq-answer">It is a unique PriceIQ score out of 10 that combines two signals — how customers feel about your product (sentiment) and how competitively you are priced (pricing position). A score of 8+ means excellent, 6-8 is good, 4-6 is average, below 4 needs immediate action.</div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">When are customer segmentation and forecasting coming? <span class="faq-icon">+</span></div>
+            <div class="faq-answer">Customer segmentation using K-Means ML and sales forecasting using time-series regression are actively being built as separate microservices. They will be available in the next major update. Create an account to get notified when they launch.</div>
+        </div>
+
     </div>
 </section>
 
@@ -412,8 +466,8 @@ landing_content = """
             <div class="chat-header-left">
                 <div class="chat-avatar">⚡</div>
                 <div class="chat-header-info">
-                    <div class="chat-header-name">PriceIQ Assistant</div>
-                    <div class="chat-header-status">AI-powered · Online</div>
+                    <div class="chat-header-name">Maya — PriceIQ Assistant</div>
+                <div class="chat-header-status">AI-powered · Always online</div>
                 </div>
             </div>
             <button class="chat-close" onclick="toggleChat()">✕</button>
@@ -422,10 +476,13 @@ landing_content = """
             <div class="chat-msg chat-msg-bot">Hey! I'm the PriceIQ assistant. I can answer questions about the platform, help you understand features, or connect you with the team. What can I help you with?</div>
         </div>
         <div class="chat-suggestions" id="chat-suggestions">
-            <span class="chat-suggest-btn" onclick="askQuestion('What does PriceIQ do?')">What does PriceIQ do?</span>
-            <span class="chat-suggest-btn" onclick="askQuestion('How does sentiment analysis work?')">How does sentiment work?</span>
+            <span class="chat-suggest-btn" onclick="askQuestion('What does PriceIQ do?')">What is PriceIQ?</span>
             <span class="chat-suggest-btn" onclick="askQuestion('Is PriceIQ free?')">Is it free?</span>
+            <span class="chat-suggest-btn" onclick="askQuestion('How does sentiment analysis work?')">Sentiment analysis?</span>
             <span class="chat-suggest-btn" onclick="askQuestion('What products can I track?')">What can I track?</span>
+            <span class="chat-suggest-btn" onclick="askQuestion('How is PriceIQ different from Jungle Scout?')">vs Jungle Scout?</span>
+            <span class="chat-suggest-btn" onclick="askQuestion('What is the intelligence score?')">Intelligence score?</span>
+            <span class="chat-suggest-btn" onclick="askQuestion('How do I get started?')">How to start?</span>
         </div>
         <div class="chat-input-row">
             <input type="text" id="chat-input" placeholder="Ask anything..." onkeydown="if(event.key==='Enter')sendChat()" />
@@ -472,16 +529,24 @@ landing_content = """
     }
 
     const faqAnswers = {
-        'what does priceiq do': 'PriceIQ is an AI-powered e-commerce intelligence platform. It automatically compares your product prices against competitors, analyzes customer review sentiment using NLP, gives you an overall intelligence score out of 10, and recommends specific actions to improve your market position.',
-        'how does sentiment analysis work': 'PriceIQ uses Natural Language Processing (NLP) to analyze customer reviews. It scores text from -1 (very negative) to +1 (very positive). Scores above 0.2 = Positive, below -0.2 = Negative, in between = Neutral. We are upgrading to transformer-based models (DistilBERT) for even more accurate context-aware analysis.',
-        'is priceiq free': 'Yes! PriceIQ is completely free to use in demo mode. You can run unlimited product analyses, compare competitors, and track price trends at no cost. Premium features like customer segmentation and sales forecasting are coming soon.',
-        'what products can i track': 'PriceIQ covers 80+ product categories including electronics (phones, laptops, headphones), home appliances, fashion (shoes, clothing), food & grocery, fitness equipment, gaming, beauty products, and furniture.',
-        'how does the intelligence score work': 'The Product Intelligence Score out of 10 combines two signals: your sentiment score (how customers feel about your product) and your pricing position (how you compare to competitors). A score of 8+ means excellent position, 6-8 is good, 4-6 is average, below 4 needs immediate attention.',
-        'what is the price trend': 'Price Trend Analysis tracks how your price and competitor prices change over time. Every time you analyze a product, the price is saved to history. Over multiple days, you can see patterns — like whether competitors are dropping prices — and react proactively.',
+        'what does priceiq do': 'PriceIQ is an AI-powered e-commerce intelligence platform. It automatically compares your product prices against competitors, analyzes customer review sentiment, gives you an intelligence score out of 10, and recommends exactly what action to take. Try the live demo — no signup needed!',
+        'how does sentiment analysis work': 'PriceIQ reads customer reviews using Natural Language Processing and scores the emotional tone from -1 (very negative) to +1 (very positive). This sentiment score is combined with your pricing position to create your overall Product Intelligence Score.',
+        'is priceiq free': 'Yes — completely free! No credit card, no signup required. Click the demo button and start analyzing immediately. Premium features like customer segmentation and forecasting are coming soon.',
+        'what products can i track': 'PriceIQ covers 80+ categories — electronics, phones, laptops, headphones, TVs, appliances, fashion, food, fitness, gaming, beauty, and furniture. We are always adding more.',
+        'how is priceiq different from jungle scout': 'Jungle Scout only works for Amazon sellers. Keepa only tracks Amazon price history. PriceIQ works across all categories, adds AI sentiment analysis, and gives a combined intelligence score — something neither platform offers.',
+        'what is the intelligence score': 'The Product Intelligence Score out of 10 combines sentiment (how customers feel) and pricing position (how competitive you are). 8+ is excellent, 6-8 is good, 4-6 is average, below 4 needs urgent action.',
+        'how do i get started': 'Just click the "Try Live Intelligence Demo" button — no account needed! Enter your product name, your price, a competitor price, and a customer review. PriceIQ does the rest instantly.',
+        'how to start': 'Click "Try Live Intelligence Demo" at the top of the page. No signup, no credit card. Just enter your product details and get instant AI intelligence.',
+        'when is segmentation coming': 'Customer segmentation and sales forecasting are actively being built. Create an account to get notified when they launch!',
+        'price trend': 'Price Trend Analysis tracks how your price and competitor prices change over time. Every time you analyze a product, the price is saved to history so you can spot patterns.',
     };
 
     function findAnswer(question) {
         const q = question.toLowerCase();
+        for (const [key, answer] of Object.entries(faqAnswers)) {
+            const keywords = key.split(' ').filter(w => w.length > 3);
+            if (keywords.filter(k => q.includes(k)).length >= 2) return answer;
+        }
         for (const [key, answer] of Object.entries(faqAnswers)) {
             const keywords = key.split(' ').filter(w => w.length > 3);
             if (keywords.some(k => q.includes(k))) return answer;

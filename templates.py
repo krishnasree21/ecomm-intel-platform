@@ -710,6 +710,12 @@ html_content = """
                 </div>`).join('');
     }
 
+    function toggleFaq(item) {
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+    }
+
     window.onload = loadDashboard;
 </script>
 </body>

@@ -585,7 +585,7 @@ landing_content = """
                 showFollowups();
             } catch(e) {
                 hideTyping();
-                addMessage('I can help with questions about PriceIQ! Try asking about our features, how sentiment analysis works, or what products we track.', 'bot');
+                addMessage("I'm not sure about that one! For detailed answers, create a free account and explore the full platform. Or try asking me about features, pricing, or how to get started 😊", 'bot');
                 showFollowups();
             }
         }

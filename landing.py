@@ -473,7 +473,7 @@ landing_content = """
             <button class="chat-close" onclick="toggleChat()">✕</button>
         </div>
         <div class="chat-messages" id="chat-messages">
-            <div class="chat-msg chat-msg-bot">Hey! I'm the PriceIQ assistant. I can answer questions about the platform, help you understand features, or connect you with the team. What can I help you with?</div>
+            <div class="chat-msg chat-msg-bot">Hey! I'm the PriceIQ assistant, Maya. I can answer questions about the platform, help you understand features, or connect you with the team. What can I help you with?</div>
         </div>
         <div class="chat-suggestions" id="chat-suggestions">
             <span class="chat-suggest-btn" onclick="askQuestion('What does PriceIQ do?')">What is PriceIQ?</span>
